@@ -7,7 +7,7 @@ using namespace std;
 
 // Function declarations
 string trim(const string &str);
-string splitString(const string &str, char koma);
+vector<string> splitString(const string &str, char koma);
 string join(const vector<string> &vec);
 
 // Main function
@@ -27,25 +27,26 @@ int main() {
     }
 
     if (!validFile.is_open()) {
-        cout << "Failed to open valid_routes.txt" << endl;
+        cout << "Failed to open valid_db.txt" << endl;
         return 1;
     }
 
     string line;
+    string lineCheck;
     vector<string> lineElem;
     while (getline(inputFile, line)) {
-        if (line.empty()) continue; // Skip empty lines
+        lineCheck = trim(line); // Trim leading/trailing whitespace
+        if (lineCheck.empty()) continue; // Skip empty or whitespace-only lines
+        
         lineElem = splitString(line,','); // Remove any extra spaces
 
-        string newLine;
+        
         if (lineElem.size()==5) {
-            newLine = join(lineElem);
-            validFile << newLine<< endl;
-            newLine.clear();
+            validFile << join(lineElem) << endl;
+            lineElem.clear();
         } else {
-            newLine = join(lineElem);
-            errorFile << newLine<< endl;
-            newLine.clear();
+            errorFile << join(lineElem) << endl;
+            lineElem.clear();
         }
 
         
