@@ -1,3 +1,4 @@
+// Džeina Bīskapa 191RBC018 8.grupa
 #include <iostream>
 #include <fstream>
 #include <string>
