@@ -8,6 +8,7 @@ using namespace std;
 string trim(const string &str);
 vector<string> splitString(const string &str, char koma);
 string join(const vector<string> &vec, char divider);
+bool check5Valid (const vector<string> &vec);
 void aCommand ();
 void bCommand ();
 void cCommand ();
@@ -40,13 +41,19 @@ int main() {
         
         lineElem = splitString(line,','); // attīram, sadalam elementus
 
+        static bool firstLineErr = true;
         if (lineElem.size()==5) {
-            static bool firstLineVal = true; // lai pēc pēdājās linijas nebūtu \n
-            if (!firstLineVal) validFile << endl;
-            validFile << join(lineElem,',');
-            firstLineVal = false;
+            if (check5Valid(lineElem) == true) {
+                static bool firstLineVal = true; // lai pēc pēdājās linijas nebūtu \n
+                if (!firstLineVal) validFile << endl;
+                validFile << join(lineElem,',');
+                firstLineVal = false;
+            } else {
+                if (!firstLineErr) errorFile << endl;
+                errorFile << join(lineElem,',');
+                firstLineErr = false;
+            }  
         } else {
-            static bool firstLineErr = true;
             if (!firstLineErr) errorFile << endl;
             errorFile << join(lineElem,',');
             firstLineErr = false;
@@ -134,6 +141,29 @@ string join(const vector<string> &vec, char divider) {
         }
     }
     return result;
+}
+
+bool check5Valid (const vector<string> &vec) {
+    for (size_t i = 0; i < vec.size(); ++i) {
+        string element = vec[i];
+        if (i < 3) {
+            size_t pos = element.find_first_of("0123456789:.");
+            if (pos != string::npos) {
+                return false;
+            }
+        } else if (i == 3) {
+            size_t pos = element.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.");
+            if (pos != string::npos) {
+                return false;
+            }
+        } else if (i == 4) {
+            size_t pos = element.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ:");
+            if (pos != string::npos) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 void aCommand () {
